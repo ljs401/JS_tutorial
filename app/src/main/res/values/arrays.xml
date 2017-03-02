@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="ServiceGuideSearch">
+        <item>11 : 서비스소개</item>
+        <item>21 : 결제안내-바코드</item>
+        <item>22 : 결제안내-핸즈프리</item>
+        <item>23 : 결제안내-온라인</item>
+        <item>31 : 결제방법</item>
+    </string-array>
+</resources>
