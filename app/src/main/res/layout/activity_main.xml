@@ -1,39 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.js.myapplication.MainActivity">
+
     <LinearLayout
-        android:id="@+id/detailMenu_SerServiceGuideSearch"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content">
         <Spinner
-            android:id="@+id/spinner_ServiceGuideSearch"
+            android:id="@+id/main_api_spinner"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.8" />
         <Button
-            android:id="@+id/button_ServiceGuideSearch"
+            android:id="@+id/main_request_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.2"
-            android:text="전송" />
+            android:text="초기화" />
     </LinearLayout>
-    <ScrollView
-        android:id="@+id/contents_ServiceGuideSearch"
+
+    <FrameLayout
+        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/detailMenu_SerServiceGuideSearch">
-        <WebView
-            android:id="@+id/webView_ServiceGuideSearch"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </ScrollView>
+        android:layout_above="@+id/main_ll" />
+
+    <LinearLayout
+        android:id="@+id/main_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/main_button_1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:text="APP"
+            android:onClick="onClick"/>
+
+        <Button
+            android:id="@+id/main_button_2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:text="결제"
+            android:onClick="onClick"/>
+
+        <Button
+            android:id="@+id/main_button_3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:text="운영"
+            android:onClick="onClick"/>
+
+        <Button
+            android:id="@+id/main_button_4"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:text="담당자"
+            android:onClick="onClick"/>
+    </LinearLayout>
 </RelativeLayout>
+
