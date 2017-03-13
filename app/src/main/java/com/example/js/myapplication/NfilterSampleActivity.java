@@ -34,13 +34,11 @@ public class NfilterSampleActivity extends AppCompatActivity{
         }
 
         final AppCompatActivity appCompatActivity = this;
-
         Button button2 = (Button) findViewById(R.id.btnViewNative);
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
-
                     HashMap<String,Object> map = new HashMap<String,Object>();
                     map.put("SESSION_ID", "2683f67bcb38cccddafbee013fa3d304af324c30");
                     String apiName = "App-SessionInitialize";

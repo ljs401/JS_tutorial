@@ -46,8 +46,16 @@
         android:id="@+id/login_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
         android:layout_above="@id/login_loading_progressBar"
-        android:layout_centerHorizontal="true"
         android:text="로그인" />
+
+    <Button
+        android:id="@+id/nFilter_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/login_loading_progressBar"
+        android:layout_alignParentRight="true"
+        android:text="nFilter" />
 
 </RelativeLayout>

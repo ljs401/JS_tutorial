@@ -141,7 +141,7 @@ public class MagicSE {
                     d("Debug", urlConnection.getHeaderFields().toString());
                     String cookieStr = urlConnection.getHeaderField("Set-Cookie");
                     String cookie = cookieStr.substring(0, cookieStr.indexOf(";"));
-                    //String cookieName = cookie.substring(0, cookie.indexOf("="));
+                   // String cookieName = cookie.substring(0, cookie.indexOf("="));
                     /**
                      * jsessionId 읽어들여서 설정(Static)
                      */
@@ -169,7 +169,6 @@ public class MagicSE {
                         Log.d("Debug", "sessionKey : " + sessionKey);
                         String encSessionKey = instance.MagicSE_GetEncSessionKey(sessionKey);
                         Log.d("Debug", "encSessionKey : " + encSessionKey);
-
                         /**
                          * SecuritySessionKey 진행
                          */

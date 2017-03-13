@@ -16,9 +16,9 @@
         android:theme="@style/AppTheme">
 
         <activity android:name=".ServiceGuideSearch" />
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".NfilterSampleActivity">
-            <activity android:name=".MainActivity" />
+        <activity android:name=".MainActivity" />
+        <activity android:name=".NfilterSampleActivity" />
+        <activity android:name=".LoginActivity">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
                 <action android:name="android.intent.action.MAIN" />

@@ -87,6 +87,14 @@ public class LoginActivity extends Activity {
                 }
             }
         });
+
+        Button nFilterButton = (Button) findViewById(R.id.nFilter_button);
+        nFilterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), NfilterSampleActivity.class));
+            }
+        });
     }
 
     @Override
