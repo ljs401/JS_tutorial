@@ -2,4 +2,7 @@
     <string name="app_name">My Application</string>
     <string name="login_comment_info">인가된 Device만 사용가능 합니다.</string>
     <string name="login_comment_loading">접속 가능 여부를 체크 중 입니다.</string>
+    <string name="btn_num">숫자 입력값 복호화</string>
+    <string name="btn_char">문자 입력값 복호화</string>
+    <string name="btn_server">서버로부터 입력값 복호화</string>
 </resources>
