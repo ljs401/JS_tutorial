@@ -13,5 +13,5 @@ public class Utile {
     public String getDeviceId(Context mContext) {
         final TelephonyManager tm = (TelephonyManager) mContext.getSystemService(Context.TELEPHONY_SERVICE);
         return tm.getDeviceId();
-   }
+    }
 }

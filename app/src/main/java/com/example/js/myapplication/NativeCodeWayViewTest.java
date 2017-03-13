@@ -38,7 +38,7 @@ import java.io.InputStreamReader;
 public class NativeCodeWayViewTest extends Activity {
 
     private NFilter nfilter = null;
-    private EditText et1,et2, et3 = null;
+    private EditText et1, et2, et3 = null;
     Button btn1, btn2, btn3 = null;
     TextView tv, tmpTv = null;
     ProgressDialog dialog = null;
@@ -61,25 +61,25 @@ public class NativeCodeWayViewTest extends Activity {
     public static final int DIALOG_NUM = 43;
     public static final int DIALOG_SERVER = 53;
 
-    private Handler handler = new Handler(){
+    private Handler handler = new Handler() {
 
         @Override
         public void handleMessage(Message msg) {
             // TODO Auto-generated method stub
-            switch(msg.what){
-                case DIALOG_CHAR :
+            switch (msg.what) {
+                case DIALOG_CHAR:
                     showDialog(DIALOG_CHAR);
                     //handler.sendEmptyMessageDelayed(DIALOG_CHAR, 1000);
                     break;
-                case DIALOG_NUM :
+                case DIALOG_NUM:
                     showDialog(DIALOG_NUM);
                     //handler.sendEmptyMessageDelayed(DIALOG_NUM, 1000);
                     break;
-                case DIALOG_SERVER :
+                case DIALOG_SERVER:
                     showDialog(DIALOG_SERVER);
                     //handler.sendEmptyMessageDelayed(DIALOG_SERVER, 1000);
                     break;
-                default :
+                default:
                     break;
             }
             super.handleMessage(msg);
@@ -88,11 +88,12 @@ public class NativeCodeWayViewTest extends Activity {
 
     String pubkey1 = "";
     String pubkey2 = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (android.os.Build.VERSION.SDK_INT > android.os.Build.VERSION_CODES.GINGERBREAD_MR1 ) {
+        if (android.os.Build.VERSION.SDK_INT > android.os.Build.VERSION_CODES.GINGERBREAD_MR1) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
         }
 
@@ -118,13 +119,14 @@ public class NativeCodeWayViewTest extends Activity {
             @Override
             public void onClick(View v) {
 
-                if( nfilter.isNFilterViewVisibility() == View.VISIBLE) nfilter.nFilterClose( View.GONE );
+                if (nfilter.isNFilterViewVisibility() == View.VISIBLE)
+                    nfilter.nFilterClose(View.GONE);
                 nfilter.setFieldName("et1");   //EditText
                 //입력값을 listener로 받는다.
-                nfilter.setOnClickListener( new NFilterOnClickListener() {
+                nfilter.setOnClickListener(new NFilterOnClickListener() {
                     @Override
                     public void onNFilterClick(NFilterTO nFilterTO) {
-                        nFilterResult( nFilterTO );
+                        nFilterResult(nFilterTO);
                     }
                 });
                 //nFilter 실행 메서드
@@ -141,13 +143,14 @@ public class NativeCodeWayViewTest extends Activity {
             @Override
             public void onClick(View v) {
 
-                if( nfilter.isNFilterViewVisibility() == View.VISIBLE) nfilter.nFilterClose( View.GONE );
+                if (nfilter.isNFilterViewVisibility() == View.VISIBLE)
+                    nfilter.nFilterClose(View.GONE);
                 nfilter.setFieldName("et2");
                 //입력값을 listener로 받는다.
-                nfilter.setOnClickListener( new NFilterOnClickListener() {
+                nfilter.setOnClickListener(new NFilterOnClickListener() {
                     @Override
                     public void onNFilterClick(NFilterTO nFilterTO) {
-                        nFilterResult( nFilterTO );
+                        nFilterResult(nFilterTO);
                     }
                 });
                 //nFilter 실행 메서드
@@ -164,13 +167,14 @@ public class NativeCodeWayViewTest extends Activity {
             @Override
             public void onClick(View v) {
 
-                if( nfilter.isNFilterViewVisibility() == View.VISIBLE) nfilter.nFilterClose( View.GONE );
+                if (nfilter.isNFilterViewVisibility() == View.VISIBLE)
+                    nfilter.nFilterClose(View.GONE);
                 nfilter.setFieldName("et3");
                 //입력값을 listener로 받는다.
-                nfilter.setOnClickListener( new NFilterOnClickListener() {
+                nfilter.setOnClickListener(new NFilterOnClickListener() {
                     @Override
                     public void onNFilterClick(NFilterTO nFilterTO) {
-                        nFilterResult( nFilterTO );
+                        nFilterResult(nFilterTO);
                     }
                 });
                 //nFilter 실행 메서드
@@ -179,11 +183,11 @@ public class NativeCodeWayViewTest extends Activity {
             }
         });
 
-        btn1 = (Button)findViewById(R.id.num_conf);
+        btn1 = (Button) findViewById(R.id.num_conf);
         btn1.setOnClickListener(onClickListener);
-        btn2 = (Button)findViewById(R.id.char_conf);
+        btn2 = (Button) findViewById(R.id.char_conf);
         btn2.setOnClickListener(onClickListener);
-        btn3 = (Button)findViewById(R.id.server_conf);
+        btn3 = (Button) findViewById(R.id.server_conf);
         btn3.setOnClickListener(onClickListener);
 
     }
@@ -196,8 +200,8 @@ public class NativeCodeWayViewTest extends Activity {
         LayoutInflater inflater = getLayoutInflater();
         View view = inflater.inflate(R.layout.custom_dialog, null);
         builder.setView(view);
-        switch(id){
-            case DIALOG_CHAR :
+        switch (id) {
+            case DIALOG_CHAR:
                 builder.setTitle("문자 입력값 정보");
                 builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
 
@@ -213,7 +217,7 @@ public class NativeCodeWayViewTest extends Activity {
                 handler.sendEmptyMessageDelayed(DIALOG_CHAR, 1000);
                 return builder.create();
 
-            case DIALOG_NUM :
+            case DIALOG_NUM:
                 builder.setTitle("숫자 입력값 정보");
                 builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
 
@@ -229,7 +233,7 @@ public class NativeCodeWayViewTest extends Activity {
                 handler.sendEmptyMessageDelayed(DIALOG_NUM, 1000);
                 return builder.create();
 
-            case DIALOG_SERVER :
+            case DIALOG_SERVER:
                 builder.setTitle("서버 복호화 정보");
                 builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
 
@@ -250,36 +254,37 @@ public class NativeCodeWayViewTest extends Activity {
         }
         return super.onCreateDialog(id);
     }
+
     @Override
     protected void onPrepareDialog(int id, Dialog dialog) {
         // TODO Auto-generated method stub
-        tv = (TextView)dialog.findViewById(R.id.message);
-        switch(id){
-            case DIALOG_CHAR :
-                if(plndatalength_char != 0){
+        tv = (TextView) dialog.findViewById(R.id.message);
+        switch (id) {
+            case DIALOG_CHAR:
+                if (plndatalength_char != 0) {
                     tv.setText("\r\n" +
                             "문자 암호화 데이터 :: " + encdata_char + "\r\n\r\n" +
                             "문자 평문 데이터 :: " + plaindata_char + "\r\n\r\n" +
-                            "문자 사용자 입력 데이터 :: " + new String(plainDataByte_char) + "\r\n" );
-                }else{
+                            "문자 사용자 입력 데이터 :: " + new String(plainDataByte_char) + "\r\n");
+                } else {
                     tv.setText("null");
                 }
                 break;
-            case DIALOG_NUM :
-                if(plndatalength_num != 0){
+            case DIALOG_NUM:
+                if (plndatalength_num != 0) {
                     tv.setText("\r\n" +
                             "숫자 암호화 데이터 :: " + encdata_num + "\r\n\r\n" +
                             "숫자 평문 데이터 :: " + plaindata_num + "\r\n\r\n" +
-                            "숫자 사용자 입력 데이터 :: " + new String(plainDataByte_num) + "\r\n" );
-                }else{
+                            "숫자 사용자 입력 데이터 :: " + new String(plainDataByte_num) + "\r\n");
+                } else {
                     tv.setText("null");
                 }
 
                 break;
-            case DIALOG_SERVER :
-                if(plndatalength_num != 0 && plndatalength_char != 0){
+            case DIALOG_SERVER:
+                if (plndatalength_num != 0 && plndatalength_char != 0) {
                     new DecryptAsyncTask().execute("http://demo.nshc.net:8088/nfilter/static/nfilter_prop.jsp");
-                }else{
+                } else {
                     tv.setText("문자/숫자 데이터를 입력해 주세요");
                 }
 
@@ -322,9 +327,9 @@ public class NativeCodeWayViewTest extends Activity {
     @Override
     public Object getSystemService(String name) {
 
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP){
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             return SecurityHelper.getWrappedSystemService(super.getSystemService(name), name);
-        } else{
+        } else {
             return super.getSystemService(name);
         }
     }
@@ -344,21 +349,22 @@ public class NativeCodeWayViewTest extends Activity {
         @Override
         public void onClick(View v) {
             // TODO Auto-generated method stub
-            switch(v.getId()){
-                case R.id.num_conf :
+            switch (v.getId()) {
+                case R.id.num_conf:
                     showDialog(DIALOG_NUM);
                     break;
 
-                case R.id.char_conf :
+                case R.id.char_conf:
                     showDialog(DIALOG_CHAR);
                     break;
 
-                case R.id.server_conf :
-                    if(plndatalength_char != 0 && plndatalength_num != 0)dialog = ProgressDialog.show(NativeCodeWayViewTest.this, "로딩 중...", "잠시만 기다려주세요", false);
+                case R.id.server_conf:
+                    if (plndatalength_char != 0 && plndatalength_num != 0)
+                        dialog = ProgressDialog.show(NativeCodeWayViewTest.this, "로딩 중...", "잠시만 기다려주세요", false);
                     showDialog(DIALOG_SERVER);
                     break;
 
-                default :
+                default:
                     break;
             }
         }
@@ -366,8 +372,8 @@ public class NativeCodeWayViewTest extends Activity {
 
     @Override
     public void onBackPressed() {
-        if( nfilter.isNFilterViewVisibility() == View.VISIBLE){
-            nfilter.nFilterClose( View.GONE );
+        if (nfilter.isNFilterViewVisibility() == View.VISIBLE) {
+            nfilter.nFilterClose(View.GONE);
             return;
         }
         super.onBackPressed();
@@ -376,34 +382,35 @@ public class NativeCodeWayViewTest extends Activity {
     /**
      * nFilter 리턴값 처리 메서드
      * sample 예제 이므로 상황에 맞게 변경하여 사용하시면됩니다.
+     *
      * @param nFilterTO
      */
     public void nFilterResult(NFilterTO nFilterTO) {
 
-        if( nFilterTO.getFocus() == NFilter.NEXTFOCUS ){
-            if( new String(  nFilterTO.getFieldName() ).equals("et1") ){
-            }else if( new String(  nFilterTO.getFieldName() ).equals("et2") ){
+        if (nFilterTO.getFocus() == NFilter.NEXTFOCUS) {
+            if (new String(nFilterTO.getFieldName()).equals("et1")) {
+            } else if (new String(nFilterTO.getFieldName()).equals("et2")) {
             }
 
             nfilter.nFilterClose(View.GONE); //nFilter 닫기
-        }else if( nFilterTO.getFocus() == NFilter.PREFOCUS ){
-            if( new String(  nFilterTO.getFieldName() ).equals("et1") ){
-            }else if( new String(  nFilterTO.getFieldName() ).equals("et2") ){
+        } else if (nFilterTO.getFocus() == NFilter.PREFOCUS) {
+            if (new String(nFilterTO.getFieldName()).equals("et1")) {
+            } else if (new String(nFilterTO.getFieldName()).equals("et2")) {
             }
 
             nfilter.nFilterClose(View.GONE);
-        }else if( nFilterTO.getFocus() == NFilter.DONEFOCUS ){
-            if( new String(  nFilterTO.getFieldName() ).equals("et1") ){
-            }else if( new String(  nFilterTO.getFieldName() ).equals("et2") ){
+        } else if (nFilterTO.getFocus() == NFilter.DONEFOCUS) {
+            if (new String(nFilterTO.getFieldName()).equals("et1")) {
+            } else if (new String(nFilterTO.getFieldName()).equals("et2")) {
             }
 
             nfilter.nFilterClose(View.GONE);
-        }else{
-            if( nFilterTO.getPlainLength() > 0 ){
-                NFilterLOG.i("padding getFieldName", "getFieldName : " + new String(  nFilterTO.getFieldName() ) );
+        } else {
+            if (nFilterTO.getPlainLength() > 0) {
+                NFilterLOG.i("padding getFieldName", "getFieldName : " + new String(nFilterTO.getFieldName()));
                 //리턴 값을 해당 TextView에 넣는다.
-                if( new String(  nFilterTO.getFieldName() ).equals("et1") ){
-                    et1.setText( new String( nFilterTO.getDummyData() ) );
+                if (new String(nFilterTO.getFieldName()).equals("et1")) {
+                    et1.setText(new String(nFilterTO.getDummyData()));
 
                     encdata_char = nFilterTO.getEncData();
                     plndatalength_char = nFilterTO.getPlainLength();
@@ -411,10 +418,10 @@ public class NativeCodeWayViewTest extends Activity {
                     plainNormalData_char = nFilterTO.getPlainNormalData();
                     plaindata_char = nFilterTO.getPlainData();
                     plainDataByte_char = NFilterUtils.getInstance().nSaferDecryptWithBase64(plaindata_char);
-                    NFilterLOG.i("padding getPlainLength", "getPlainLength : " + nFilterTO.getPlainLength() );
-                    NFilterLOG.i("padding getDummyData", "getDummyData : " + ( nFilterTO.getDummyData()  ));
-                    NFilterLOG.i("padding getEncData", "getEncData : " + ( nFilterTO.getEncData()  ));
-                    Log.e("nFilterResult", "AES Enc Data : " + nFilterTO.getAESEncData() );
+                    NFilterLOG.i("padding getPlainLength", "getPlainLength : " + nFilterTO.getPlainLength());
+                    NFilterLOG.i("padding getDummyData", "getDummyData : " + (nFilterTO.getDummyData()));
+                    NFilterLOG.i("padding getEncData", "getEncData : " + (nFilterTO.getEncData()));
+                    Log.e("nFilterResult", "AES Enc Data : " + nFilterTO.getAESEncData());
                     Log.e("nFilter", "nfilter plain data : " + new String(plainDataByte_char));
                     // 입력필드가 가상키보드에 가려서 보이지 않을 경우
                     // 임시로 값을 보여주는 editText
@@ -422,8 +429,8 @@ public class NativeCodeWayViewTest extends Activity {
 
                     // ================================================================ //
 
-                }else if( new String(  nFilterTO.getFieldName() ).equals("et2") ){
-                    et2.setText( new String( nFilterTO.getDummyData() ) );
+                } else if (new String(nFilterTO.getFieldName()).equals("et2")) {
+                    et2.setText(new String(nFilterTO.getDummyData()));
 
                     encdata_num = nFilterTO.getEncData();
                     plndatalength_num = nFilterTO.getPlainLength();
@@ -431,17 +438,17 @@ public class NativeCodeWayViewTest extends Activity {
                     plainNormalData_num = nFilterTO.getPlainNormalData();
                     plaindata_num = nFilterTO.getPlainData();
                     plainDataByte_num = NFilterUtils.getInstance().nSaferDecryptWithBase64(plaindata_num);
-                    NFilterLOG.i("padding getPlainLength", "getPlainLength : " + nFilterTO.getPlainLength() );
-                    NFilterLOG.i("padding getDummyData", "getDummyData : " + ( nFilterTO.getDummyData()  ));
-                    NFilterLOG.i("padding getEncData", "getEncData : " + ( nFilterTO.getEncData()  ));
-                    Log.e("nFilterResult", "AES Enc Data : " + nFilterTO.getAESEncData() );
+                    NFilterLOG.i("padding getPlainLength", "getPlainLength : " + nFilterTO.getPlainLength());
+                    NFilterLOG.i("padding getDummyData", "getDummyData : " + (nFilterTO.getDummyData()));
+                    NFilterLOG.i("padding getEncData", "getEncData : " + (nFilterTO.getEncData()));
+                    Log.e("nFilterResult", "AES Enc Data : " + nFilterTO.getAESEncData());
                     Log.e("nFilter", "nfilter plain data : " + new String(plainDataByte_num));
                     // 입력필드가 가상키보드에 가려서 보이지 않을 경우
                     // 임시로 값을 보여주는 editText
                     // nfilter_num_key_view.xml 32라인에서 직접 수정 가능
 
-                }else if( new String(  nFilterTO.getFieldName() ).equals("et3") ){
-                    et3.setText( new String( nFilterTO.getDummyData() ) );
+                } else if (new String(nFilterTO.getFieldName()).equals("et3")) {
+                    et3.setText(new String(nFilterTO.getDummyData()));
 
                     encdata_num = nFilterTO.getEncData();
                     plndatalength_num = nFilterTO.getPlainLength();
@@ -449,10 +456,10 @@ public class NativeCodeWayViewTest extends Activity {
                     plainNormalData_num = nFilterTO.getPlainNormalData();
                     plaindata_num = nFilterTO.getPlainData();
                     plainDataByte_num = NFilterUtils.getInstance().nSaferDecryptWithBase64(plaindata_num);
-                    NFilterLOG.i("padding getPlainLength", "getPlainLength : " + nFilterTO.getPlainLength() );
-                    NFilterLOG.i("padding getDummyData", "getDummyData : " + ( nFilterTO.getDummyData()  ));
-                    NFilterLOG.i("padding getEncData", "getEncData : " + ( nFilterTO.getEncData()  ));
-                    Log.e("nFilterResult", "AES Enc Data : " + nFilterTO.getAESEncData() );
+                    NFilterLOG.i("padding getPlainLength", "getPlainLength : " + nFilterTO.getPlainLength());
+                    NFilterLOG.i("padding getDummyData", "getDummyData : " + (nFilterTO.getDummyData()));
+                    NFilterLOG.i("padding getEncData", "getEncData : " + (nFilterTO.getEncData()));
+                    Log.e("nFilterResult", "AES Enc Data : " + nFilterTO.getAESEncData());
                     Log.e("nFilter", "nfilter plain data : " + new String(plainDataByte_num));
                     // 입력필드가 가상키보드에 가려서 보이지 않을 경우
                     // 임시로 값을 보여주는 editText
@@ -460,19 +467,19 @@ public class NativeCodeWayViewTest extends Activity {
 
                 }
 
-            }else{
+            } else {
                 //리턴 값을 해당 TextView에 넣는다.
-                if( new String(  nFilterTO.getFieldName() ).equals("et1") ){
-                    et1.setText( "" );
+                if (new String(nFilterTO.getFieldName()).equals("et1")) {
+                    et1.setText("");
 
                     // 입력필드가 가상키보드에 가려서 보이지 않을 경우
                     // 임시로 값을 보여주는 editText
                     // nfilter_char_key_view.xml 32라인에서 직접 수정 가능
                     // ================================================================ //
 
-                }else if( new String(  nFilterTO.getFieldName() ).equals("et2") ){
+                } else if (new String(nFilterTO.getFieldName()).equals("et2")) {
 
-                    et2.setText( "" );
+                    et2.setText("");
                     // 입력필드가 가상키보드에 가려서 보이지 않을 경우
                     // 임시로 값을 보여주는 editText
                     // nfilter_num_key_view.xml 32라인에서 직접 수정 가능
@@ -484,7 +491,7 @@ public class NativeCodeWayViewTest extends Activity {
         }
     }
 
-//    public String setSyncCookie( String publicUrl ){
+    //    public String setSyncCookie( String publicUrl ){
 //        try {
 //
 //            HttpPost post = new HttpPost( publicUrl );
@@ -546,7 +553,7 @@ public class NativeCodeWayViewTest extends Activity {
         }
     }
 
-    class publicKeyAsyncTask extends AsyncTask<String, Void, String>{
+    class publicKeyAsyncTask extends AsyncTask<String, Void, String> {
 
         @Override
         protected void onPostExecute(String result) {
