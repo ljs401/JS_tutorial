@@ -25,15 +25,64 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.2"
             android:text="전송" />
+
+
+        <Button android:id="@+id/btnViewWebview" android:visibility="gone"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:onClick="onClick" android:text="View - WebView 방식 "
+            />
+
+        <Button android:id="@+id/btnActivityWebview" android:visibility="gone"
+            android:layout_width="fill_parent" android:layout_height="wrap_content"
+            android:onClick="onClick" android:text="Activity - WebView 방식 "
+            />
+
     </LinearLayout>
+
+    <EditText
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:text="NSHC nFilter SAMPLE" android:textSize="30sp"
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/textView"
+        android:layout_below="@+id/detailMenu_SerServiceGuideSearch"
+        android:layout_alignParentStart="true" />
+
+    <Button android:id="@+id/btnViewNative" android:visibility="visible"
+        android:layout_width="fill_parent" android:layout_height="wrap_content"
+        android:onClick="onClick (InitActivity)" android:text="NFILTER TEST"
+        android:layout_below="@+id/textView"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="10dp" />
+
+    <Button
+        android:id="@+id/Nfilter"
+        android:visibility="visible"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onClick (InitActivity)"
+        android:text="Nfilter"
+        android:layout_below="@+id/btnViewNative"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="14dp" />
+
     <ScrollView
         android:id="@+id/contents_ServiceGuideSearch"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/detailMenu_SerServiceGuideSearch">
+        android:layout_below="@+id/Nfilter"
+        android:layout_alignParentStart="true">
         <WebView
             android:id="@+id/webView_ServiceGuideSearch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </ScrollView>
+
+    <!-- nFilter Start -->
+    <include android:id="@+id/nf_char_view" android:layout_width="fill_parent"
+        android:layout_height="fill_parent" layout="@layout/nfilter_char_key_view" />
+    <include android:id="@+id/nf_num_view" android:layout_width="fill_parent"
+        android:layout_height="fill_parent" layout="@layout/nfilter_num_key_view" />
+    <include android:id="@+id/nf_num_serial_view" android:layout_width="fill_parent"
+        android:layout_height="fill_parent" layout="@layout/nfilter_num_serial_key_view" />
+    <!-- nFilter End -->
 </RelativeLayout>

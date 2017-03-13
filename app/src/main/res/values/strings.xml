@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">My Application</string>
+    <string name="btn_num">숫자 입력값 복호화</string>
+    <string name="btn_char">문자 입력값 복호화</string>
+    <string name="btn_server">서버로부터 입력값 복호화</string>
 </resources>

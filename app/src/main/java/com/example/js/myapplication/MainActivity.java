@@ -1,10 +1,10 @@
 package com.example.js.myapplication;
 
+import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
@@ -14,7 +14,12 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
-import android.widget.TextView;
+
+import com.nshc.nfilter.NFilter;
+import com.tpay.app.common.Config;
+import com.tpay.app.common.MagicSE;
+import com.tpay.app.common.NetworkThread;
+import com.tpay.app.common.NfilterOBJ;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -25,16 +30,31 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
+
+import static android.util.Log.d;
 
 public class MainActivity extends AppCompatActivity{
     ArrayAdapter<CharSequence> adapter;
     String guideType = "";
+    String apiName= "App-ServiceGuideSearch";
     WebView webview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        /**
+         * 안드로이드 Activity가 바로 실행 될 때 Network으로 웹서버 등에 접속 시 android.os.NetworkOnMainThreadException이 발생
+         * 해당 부분 우회하기 위해서 별도 Thread에서 Session 처리시작함
+         */
+        try{
+            NetworkThread thread = new NetworkThread(this);
+            thread.start();
+        }catch (Exception e){
+            d("tag","Exception : "+e.getMessage()+"");
+        }
+
 
         Spinner spinner = (Spinner) findViewById(R.id.spinner_ServiceGuideSearch);
         adapter = ArrayAdapter.createFromResource(this, R.array.ServiceGuideSearch, android.R.layout.simple_spinner_item);
@@ -81,7 +101,7 @@ public class MainActivity extends AppCompatActivity{
         settings.setBuiltInZoomControls(false);
         settings.setDomStorageEnabled(true);
         settings.setDefaultTextEncodingName("UTF-8");
-
+        final AppCompatActivity appCompatActivity = this;
         Button button = (Button) findViewById(R.id.button_ServiceGuideSearch);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,10 +110,36 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
+        Button button2 = (Button) findViewById(R.id.btnViewNative);
+        button2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+
+                    HashMap<String,Object> map = new HashMap<String,Object>();
+                    map.put("SESSION_ID", "2683f67bcb38cccddafbee013fa3d304af324c30");
+                    String apiName = "App-SessionInitialize";
+                    HashMap<String,Object>  temmpp = MagicSE.getInstance(appCompatActivity).sendAPI(map,apiName,true);
+                    d("TAG",temmpp.toString());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        Button button3 = (Button) findViewById(R.id.Nfilter);
+        final Activity a = this;
+        button3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NfilterOBJ nfilter = NfilterOBJ.getInstance(a, Config.getNfilterKey());
+                nfilter.nFilterload(findViewById(R.id.activity_main),R.id.textView, NFilter.KEYPADNUM,200);
+            }
+        });
     }
 
     class ServiceGuideSearchHTTP extends AsyncTask<Void, Void, String> {
-        private final String uri = "http://61.250.22.44:8001/app/handler/App-ServiceGuideSearch";
+        private String uri = "http://61.250.22.44:8001/app/handler/";
         private String response = "";
 
         @Override
@@ -106,7 +152,7 @@ public class MainActivity extends AppCompatActivity{
         protected String doInBackground(Void... params) {
             final HttpURLConnection urlConnection;
             try {
-                URL url = new URL(uri);
+                URL url = new URL(uri+apiName);
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("POST");
                 urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
@@ -133,8 +179,9 @@ public class MainActivity extends AppCompatActivity{
                 if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                     String line;
                     BufferedReader reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8"));
+                    d("TAG",urlConnection.getHeaderFields().toString());
                     while ((line = reader.readLine()) != null) {
-                        Log.d("Result : ", line + "\n");
+                        d("Result : ", line + "\n");
                         response += line;
                     }
                 }
@@ -155,7 +202,7 @@ public class MainActivity extends AppCompatActivity{
             super.onPostExecute(response);
             // 통신 실패로 처리
             if (response == null) {
-                Log.d("TAG", "result: ERROR");
+                d("TAG", "result: ERROR");
             } else {
                 /*
                 // Android 4.0 이하 버전
@@ -163,8 +210,9 @@ public class MainActivity extends AppCompatActivity{
                 // Android 4.1 이상 버전
                 webview.loadData(str,  "text/html; charset=UTF-8", null);
                 */
+
                 webview.loadData(response, "text/html; charset=UTF-8", null);
-                Log.d("TAG", "result: " + response.toString());
+                d("TAG", "result: " + response.toString());
                 // 통신 결과를 표시
             }
         }
