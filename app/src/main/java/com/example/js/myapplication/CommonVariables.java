@@ -76,7 +76,7 @@ public class CommonVariables {
     }};
 
 
-    final static ArrayList<String> mngApiName = new ArrayList<String>() {{
+    final static ArrayList<String> oprApiName = new ArrayList<String>() {{
         add("배포 후 전체 서비스 점검");
         add("TEST SMS 발송");
         add("TEST MMS 발송");
@@ -87,7 +87,7 @@ public class CommonVariables {
         add("SystemInspectSearch");
     }};
 
-    final static ArrayList<String> mngApiPath = new ArrayList<String>() {{
+    final static ArrayList<String> oprApiPath = new ArrayList<String>() {{
         add("");
         add("");
         add("");

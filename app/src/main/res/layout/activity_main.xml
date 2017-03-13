@@ -10,15 +10,14 @@
         android:layout_height="wrap_content">
         <Spinner
             android:id="@+id/main_api_spinner"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0.8" />
+            android:layout_weight="1" />
         <Button
             android:id="@+id/main_request_button"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0.2"
-            android:text="초기화" />
+            android:text="Request" />
     </LinearLayout>
 
     <FrameLayout

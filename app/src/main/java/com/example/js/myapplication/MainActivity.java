@@ -1,14 +1,10 @@
 package com.example.js.myapplication;
 
-import android.Manifest;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.Context;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 
 import android.support.v7.widget.Toolbar;
@@ -23,8 +19,8 @@ import android.widget.Spinner;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-    private FragmentManager fm;
     private String serverURL;
+    private FragmentManager fm = getFragmentManager();
     private ArrayList<String> mdnList = new ArrayList<>();
     private ArrayList<String> apiList = new ArrayList<>();
     private ArrayList<String> apiPath = new ArrayList<>();
@@ -142,20 +138,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         requestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                /*
+                 * 1) 해당 Fragment로 교체
+                 * 2) apiList에서 API명, apiPath에서 API에 대한 URL 정보 가져와 http 통신 후 결과 값 Fragment로 전달
+                 */
             }
         });
 
-        fm = getFragmentManager();
+
         // 새로운 fragment transaciton 시작
         FragmentTransaction ft = fm.beginTransaction();
-        // fragment 를 transaction 에 add
-        //    ft.add(R.id.fragment_container, new MainFragment());
+        // 기본 fragment 를 transaction 에 add
+        ft.add(R.id.fragment_container, new APP_SecurityCertificateFragment());
         // transaction 을 UI 큐에 추가한다
         ft.commit();
 
     }
-
 
     @Override
     public void onClick(View v) {
@@ -164,47 +162,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             apiList.clear();
             apiPath.clear();
             if (viewId == R.id.main_button_1) {
-
                 apiList.addAll(CommonVariables.appApiName);
                 apiPath.addAll(CommonVariables.appApiPath);
-               /* FragmentTransaction ft = fm.beginTransaction();
-                ft.replace(R.id.fragment_container, new APP());
+                FragmentTransaction ft = fm.beginTransaction();
+                ft.replace(R.id.fragment_container, new APP_SecurityCertificateFragment());
                 ft.commit();
-                main_btn_1.setSelected(true);
-                main_btn_2.setSelected(false);
-                main_btn_3.setSelected(false);
-                main_btn_4.setSelected(false);*/
-
             } else if (viewId == R.id.main_button_2) {
                 apiList.addAll(CommonVariables.payApiName);
                 apiPath.addAll(CommonVariables.payApiPath);
-                /*FragmentTransaction ft = fm.beginTransaction();
-                ft.replace(R.id.fragment_container, new Payment());
+                FragmentTransaction ft = fm.beginTransaction();
+                ft.replace(R.id.fragment_container, new PAY_VanPaymentFragment());
                 ft.commit();
-                main_btn_1.setSelected(false);
-                main_btn_2.setSelected(true);
-                main_btn_3.setSelected(false);
-                main_btn_4.setSelected(false);*/
             } else if (viewId == R.id.main_button_3) {
-                apiList.addAll(CommonVariables.mngApiName);
-                apiPath.addAll(CommonVariables.mngApiPath);
-                /*FragmentTransaction ft = fm.beginTransaction();
-                ft.replace(R.id.fragment_container, new Management());
+                apiList.addAll(CommonVariables.oprApiName);
+                apiPath.addAll(CommonVariables.oprApiPath);
+                FragmentTransaction ft = fm.beginTransaction();
+                ft.replace(R.id.fragment_container, new OPR_EntireServiceCheckFragment());
                 ft.commit();
-                main_btn_1.setSelected(false);
-                main_btn_2.setSelected(false);
-                main_btn_3.setSelected(true);
-                main_btn_4.setSelected(false);*/
             } else if (viewId == R.id.main_button_4) {
                 apiList.addAll(CommonVariables.contactApiName);
                 apiPath.addAll(CommonVariables.contactApiPath);
-                /*FragmentTransaction ft = fm.beginTransaction();
-                ft.replace(R.id.fragment_container, new Contact());
+                FragmentTransaction ft = fm.beginTransaction();
+                ft.replace(R.id.fragment_container, new CONTACT_EntireFragment());
                 ft.commit();
-                main_btn_1.setSelected(false);
-                main_btn_2.setSelected(false);
-                main_btn_3.setSelected(false);
-                main_btn_4.setSelected(true);*/
             }
             isSelectedTab = viewId;
             apiAdapter.notifyDataSetChanged();
