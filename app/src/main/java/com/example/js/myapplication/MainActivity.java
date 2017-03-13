@@ -26,7 +26,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ArrayList<String> apiPath = new ArrayList<>();
     private ArrayAdapter<String> apiAdapter;
     private Spinner apiSpinner;
-    private int isSelectedTab;
+    private int isSelected;
+
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -158,7 +159,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         int viewId = v.getId();
-        if (isSelectedTab != viewId) {
+        if (isSelected != viewId) {
             apiList.clear();
             apiPath.clear();
             if (viewId == R.id.main_button_1) {
@@ -186,7 +187,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 ft.replace(R.id.fragment_container, new CONTACT_EntireFragment());
                 ft.commit();
             }
-            isSelectedTab = viewId;
+            isSelected = viewId;
             apiAdapter.notifyDataSetChanged();
             apiSpinner.setSelection(0);
         }

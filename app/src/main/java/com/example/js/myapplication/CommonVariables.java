@@ -1,5 +1,7 @@
 package com.example.js.myapplication;
 
+import android.app.Fragment;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -8,9 +10,12 @@ import java.util.HashMap;
  */
 
 public class CommonVariables {
-    final static public String devServerURL = "개발서버주소";
-    final static public String stgServerURL = "개발서버주소";
-    final static public String prdServerURL = "개발서버주소";
+    final static public String devServerURL = "http://61.250.22.44:8001";
+    final static public String stgServerURL = "http://tpay.sktelecom.com:8002";
+    final static public String stgBLEServerURL = "http://61.250.23.219:8003";
+    final static public String prdServerURL = "https://tpay.sktelecom.com";
+    final static public String prdIOSServerURL = "http://tpay.sktelecom.com:8001";
+    final static public String prdBLEServerURL = "https://blepay.sktelecom.com";
 
 
     final static ArrayList<String> mdnList = new ArrayList<String>();
@@ -75,6 +80,35 @@ public class CommonVariables {
         add("");
     }};
 
+    final static ArrayList<Fragment> appApiFragment = new ArrayList<Fragment>() {{
+        add(new APP_SecurityCertificateFragment());
+        add(null);
+        add(null);
+        add(null);
+        add(null);
+        add(null);
+        add(null);
+        add(null);
+        add(null);
+        add(null);
+        add(null);
+        add(null);
+        add(null);
+        add(null);
+        add(null);
+        add(null);
+        add(null);
+        add(null);
+        add(null);
+        add(null);
+        add(null);
+        add(null);
+        add(null);
+        add(null);
+        add(null);
+        add(null);
+        add(null);
+    }};
 
     final static ArrayList<String> oprApiName = new ArrayList<String>() {{
         add("배포 후 전체 서비스 점검");
@@ -88,6 +122,17 @@ public class CommonVariables {
     }};
 
     final static ArrayList<String> oprApiPath = new ArrayList<String>() {{
+        add("");
+        add("");
+        add("");
+        add("");
+        add("");
+        add("");
+        add("");
+        add("");
+    }};
+
+    final static ArrayList<String> oprApiFragment = new ArrayList<String>() {{
         add("");
         add("");
         add("");
@@ -128,8 +173,8 @@ public class CommonVariables {
     }};
 
 /*
-    final static HashMap<String, String> mngApiList = new HashMap<String, String>(){{
-        put("배포 후 전체 서비스 점검","");
+    final static HashMap<String, Fragment> mngApiList = new HashMap<String, Fragment>(){{
+        put("배포 후 전체 서비스 점검",);
         put("TEST SMS 발송","");
         put("TEST MMS 발송","");
         put("TEST PUSH 발송","");
