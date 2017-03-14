@@ -270,7 +270,7 @@ public class MagicSE {
         }
         if(!map.containsKey("RESULT")){
             HashMap<String,Object> obj2 = new HashMap<>();
-            obj2.put("RESULT_CODE","");
+            obj2.put("RESULT_CODE","LINKAGE_ERROR");
             map.put("RESULT",obj2);
         }
         return (HashMap<String, Object>) map.get("RESULT");
