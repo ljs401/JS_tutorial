@@ -7,4 +7,10 @@
         <item>23 : 결제안내-온라인</item>
         <item>31 : 결제방법</item>
     </string-array>
+
+    <string-array name="ServerList">
+        <item>개발</item>
+        <item>스테이징</item>
+        <item>상용</item>
+    </string-array>
 </resources>
