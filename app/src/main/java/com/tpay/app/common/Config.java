@@ -2,7 +2,10 @@ package com.tpay.app.common;
 
 import android.app.Fragment;
 
+import com.example.js.myapplication.APP_CustomerMainSearchFragment;
 import com.example.js.myapplication.APP_SecurityCertificateFragment;
+import com.example.js.myapplication.APP_SessionInitializeFragment;
+import com.example.js.myapplication.CustomFragment;
 
 import java.util.ArrayList;
 
@@ -96,9 +99,10 @@ public class Config {
         add("");
     }};
 
-    final public static ArrayList<Fragment> appApiFragment = new ArrayList<Fragment>() {{
+    final public static ArrayList<CustomFragment> appApiFragment = new ArrayList<CustomFragment>() {{
         add(new APP_SecurityCertificateFragment());
         add(null);
+        add(new APP_SessionInitializeFragment());
         add(null);
         add(null);
         add(null);
@@ -110,8 +114,7 @@ public class Config {
         add(null);
         add(null);
         add(null);
-        add(null);
-        add(null);
+        add(new APP_CustomerMainSearchFragment());
         add(null);
         add(null);
         add(null);
@@ -148,15 +151,15 @@ public class Config {
         add("");
     }};
 
-    final public static ArrayList<String> oprApiFragment = new ArrayList<String>() {{
-        add("");
-        add("");
-        add("");
-        add("");
-        add("");
-        add("");
-        add("");
-        add("");
+    final public static ArrayList<CustomFragment> oprApiFragment = new ArrayList<CustomFragment>() {{
+        add(null);
+        add(null);
+        add(null);
+        add(null);
+        add(null);
+        add(null);
+        add(null);
+        add(null);
     }};
 
     final public static ArrayList<String> payApiName = new ArrayList<String>() {{
@@ -172,6 +175,14 @@ public class Config {
         add("");
     }};
 
+    final public static ArrayList<CustomFragment> payApiFragment = new ArrayList<CustomFragment>() {{
+        add(null);
+        add(null);
+        add(null);
+        add(null);
+    }};
+
+
     final public static ArrayList<String> contactApiName = new ArrayList<String>() {{
         add("전체");
         add("T페이 개발팀");
@@ -186,5 +197,13 @@ public class Config {
         add("");
         add("");
         add("");
+    }};
+
+    final public static ArrayList<CustomFragment> contactApiFragment = new ArrayList<CustomFragment>() {{
+        add(null);
+        add(null);
+        add(null);
+        add(null);
+        add(null);
     }};
 }

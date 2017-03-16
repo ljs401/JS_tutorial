@@ -40,7 +40,7 @@ public class NfilterSampleActivity extends AppCompatActivity{
             public void onClick(View v) {
                 try {
                     HashMap<String,Object> map = new HashMap<String,Object>();
-                    map.put("SESSION_ID", "2683f67bcb38cccddafbee013fa3d304af324c30");
+                   map.put("SESSION_ID", "2683f67bcb38cccddafbee013fa3d304af324c30");
                     String apiName = "App-SessionInitialize";
                     HashMap<String,Object>  temmpp = MagicSE.getInstance(appCompatActivity).sendAPI(map,apiName,true);
                     d("TAG",temmpp.toString());

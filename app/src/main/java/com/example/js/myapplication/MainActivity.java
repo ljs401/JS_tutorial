@@ -18,6 +18,7 @@ import android.widget.Spinner;
 import com.tpay.app.common.Config;
 import com.tpay.app.common.MagicSE;
 import com.tpay.app.common.NetworkThread;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,11 +31,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ArrayList<String> mdnList = new ArrayList<>();
     private ArrayList<String> apiList = new ArrayList<>();
     private ArrayList<String> apiPath = new ArrayList<>();
+    private ArrayList<CustomFragment> apiFragment = new ArrayList<>();
     private ArrayAdapter<String> apiAdapter;
     private Spinner apiSpinner;
     private int isSelected;
     private String apiName = "";
+    private CustomFragment currentFragment;
     final AppCompatActivity appCompatActivity = this;
+
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -131,8 +135,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 try {
                     HashMap<String, Object> map = new HashMap<String, Object>();
                     map.put("SESSION_ID", "2683f67bcb38cccddafbee013fa3d304af324c30");
+//                    map.put("SESSION_ID", "536a4832ce358f30575f58f0fdd44cb45e91da7f");
                     HashMap<String, Object> resultMap = MagicSE.getInstance(appCompatActivity).sendAPI(map, "App-MultiLineSearch", true);
-
                     d("TAG", resultMap.toString());
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -143,6 +147,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         apiList.addAll(Config.appApiName);
         apiPath.addAll(Config.appApiPath);
+        apiFragment.addAll(Config.appApiFragment);
         apiSpinner = (Spinner) findViewById(R.id.main_api_spinner);
         apiAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, apiList);
         apiAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
@@ -151,6 +156,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 apiName = apiList.get(position);
+                if ((currentFragment = apiFragment.get(position)) != null) {
+                    FragmentTransaction ft = fm.beginTransaction();
+                    ft.replace(R.id.fragment_container, currentFragment);
+                    ft.commit();
+                } else {
+                    Toast.makeText(getApplicationContext(), "API Fragment 미구현", Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
@@ -162,22 +174,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         requestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    HashMap<String, Object> map = new HashMap<String, Object>();
-                    map.put("SESSION_ID", "2683f67bcb38cccddafbee013fa3d304af324c30");
-                    HashMap<String, Object> resultMap = MagicSE.getInstance(appCompatActivity).sendAPI(map, apiName, true);
-                    d("TAG", resultMap.toString());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                /*
-                 * 1) 해당 Fragment로 교체
-                 * 2) apiList에서 API명, apiPath에서 API에 대한 URL 정보 가져와 http 통신 후 결과 값 Fragment로 전달
-                 */
+                currentFragment.setParameter(appCompatActivity, apiName);
             }
         });
-
 
         // 새로운 fragment transaciton 시작
         FragmentTransaction ft = fm.beginTransaction();
@@ -194,27 +193,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (isSelected != viewId) {
             apiList.clear();
             apiPath.clear();
+            apiFragment.clear();
             if (viewId == R.id.main_button_1) {
                 apiList.addAll(Config.appApiName);
                 apiPath.addAll(Config.appApiPath);
+                apiFragment.addAll(Config.appApiFragment);
                 FragmentTransaction ft = fm.beginTransaction();
                 ft.replace(R.id.fragment_container, new APP_SecurityCertificateFragment());
                 ft.commit();
             } else if (viewId == R.id.main_button_2) {
                 apiList.addAll(Config.payApiName);
                 apiPath.addAll(Config.payApiPath);
+                apiFragment.addAll(Config.payApiFragment);
                 FragmentTransaction ft = fm.beginTransaction();
                 ft.replace(R.id.fragment_container, new PAY_VanPaymentFragment());
                 ft.commit();
             } else if (viewId == R.id.main_button_3) {
                 apiList.addAll(Config.oprApiName);
                 apiPath.addAll(Config.oprApiPath);
+                apiFragment.addAll(Config.oprApiFragment);
                 FragmentTransaction ft = fm.beginTransaction();
                 ft.replace(R.id.fragment_container, new OPR_EntireServiceCheckFragment());
                 ft.commit();
             } else if (viewId == R.id.main_button_4) {
                 apiList.addAll(Config.contactApiName);
                 apiPath.addAll(Config.contactApiPath);
+                apiFragment.addAll(Config.contactApiFragment);
                 FragmentTransaction ft = fm.beginTransaction();
                 ft.replace(R.id.fragment_container, new CONTACT_EntireFragment());
                 ft.commit();

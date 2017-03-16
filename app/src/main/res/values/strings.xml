@@ -5,4 +5,7 @@
     <string name="btn_num">숫자 입력값 복호화</string>
     <string name="btn_char">문자 입력값 복호화</string>
     <string name="btn_server">서버로부터 입력값 복호화</string>
+    <string name="result_value">결과값</string>
+    <string name="notice_last_time">최근 공지</string>
+    <string name="event_last_time">최근 이벤트</string>
 </resources>

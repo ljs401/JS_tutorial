@@ -1,12 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main_area_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <TextView
-        android:layout_centerInParent="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="EntireServiceCheckFragment" />
+    <!--공통영역-->
+    <ScrollView
+        android:id="@+id/main_area_scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <!--공통영역-->
+        <LinearLayout
+            android:id="@+id/main_area_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-</RelativeLayout>
+            <!-- Customizing 영역 시작 -->
+
+            <TextView
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="EntireServiceCheckFragment" />
+
+            <!-- Customizing 영역 끝 -->
+
+            <!--공통영역-->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:background="@color/grey"
+                android:gravity="center_horizontal"
+                android:text="@string/result_value"
+                android:textAlignment="center"
+                android:textSize="20dp" />
+
+            <!--공통영역-->
+            <TableLayout
+                android:id="@+id/main_area_output"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
