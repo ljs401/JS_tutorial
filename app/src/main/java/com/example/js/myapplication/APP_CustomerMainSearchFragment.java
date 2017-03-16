@@ -2,23 +2,33 @@ package com.example.js.myapplication;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
+
+import com.tpay.app.common.MagicSE;
 
 import java.util.HashMap;
+import java.util.Objects;
+
+import static android.util.Log.d;
 
 /**
  * Created by JS on 2017-03-13.
  */
 
-public class CONTACT_EntireFragment extends CustomFragment {
-
+public class APP_CustomerMainSearchFragment extends CustomFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup fragment_container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.contact_entire_fragment, fragment_container, false);
+        View rootView = inflater.inflate(R.layout.app_customer_main_search_fragment, fragment_container, false);
         return rootView;
     }
 
