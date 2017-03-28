@@ -207,6 +207,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     e.printStackTrace();
                     d("ERROR",""+e.getMessage());
                 }
+
                 d("TAG"," 초기화 종료");
 //                mdnAdapter.notifyDataSetChanged();
             }
