@@ -23,6 +23,7 @@ import static android.util.Log.d;
 
 public abstract class CustomFragment extends Fragment {
     private HashMap<String, Object> result;
+
     private AppCompatActivity activity;
 
     public abstract View onCreateView(LayoutInflater inflater, ViewGroup fragment_container, Bundle savedInstanceState);
@@ -32,7 +33,7 @@ public abstract class CustomFragment extends Fragment {
     public void sendAPI(AppCompatActivity appCompatActivity, String apiName, boolean encrypted, HashMap<String, Object> parameter){
         activity = appCompatActivity;
         try {
-            result = MagicSE.getInstance(activity).sendAPI(parameter, apiName, encrypted);
+            result = MagicSE.sendAPI(parameter, apiName, encrypted);
             d("TAG", result.toString());
             showResultValues();
         } catch (Exception e) {
@@ -42,6 +43,8 @@ public abstract class CustomFragment extends Fragment {
 
     public void showResultValues() {
         if (!result.isEmpty()) {
+            d("TAG","result : "+result);
+            d("TAG","getActivity() : "+getActivity());
             TableLayout outputLayout = (TableLayout) getActivity().findViewById(R.id.main_area_output);
             outputLayout.removeAllViews();
             TableRow.LayoutParams param = new TableRow.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1);

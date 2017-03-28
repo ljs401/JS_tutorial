@@ -290,6 +290,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 ft.replace(R.id.fragment_container, new CONTACT_EntireFragment());
                 ft.commit();
             }
+            currentFragment = apiFragment.get(0);
             isSelected = viewId;
             apiAdapter.notifyDataSetChanged();
             apiSpinner.setSelection(0);

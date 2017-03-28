@@ -1,13 +1,13 @@
 package com.tpay.app.common;
 
-import android.app.Fragment;
-
 import com.example.js.myapplication.APP_CustomerMainSearchFragment;
 import com.example.js.myapplication.APP_SecurityCertificateFragment;
 import com.example.js.myapplication.APP_SessionInitializeFragment;
 import com.example.js.myapplication.CustomFragment;
+import com.example.js.myapplication.OPR_EntireServiceCheckFragment;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by Administrator on 2017-03-03.
@@ -18,7 +18,7 @@ import java.util.ArrayList;
 public class Config {
     //    final static String serverIP="http://192.168.123.14/app/handler/";
 //    final static String serverIP="https://tpay.sktelecom.com/app/handler/";
-    final static String serverIP = "http://61.250.22.44:8001/app/handler/";
+    static String serverIP = "http://61.250.22.44:8001/app/handler/";//추후 개발 사용 스테이징 변경 가능 예정으로 final 속성 제거
 
     final static public String devServerURL = "http://61.250.22.44:8001/app/handler/";
     final static public String stgServerURL = "http://tpay.sktelecom.com:8002/app/handler/";
@@ -26,6 +26,11 @@ public class Config {
     final static public String prdServerURL = "https://tpay.sktelecom.com/app/handler/";
     final static public String prdIOSServerURL = "http://tpay.sktelecom.com:8001/app/handler/";
     final static public String prdBLEServerURL = "https://blepay.sktelecom.com/app/handler/";
+
+    /**
+     * CustomerMainSearch 에서 받아온 값을 넣어둔다 추후 전체 API에서 사용자 정보 필요할경우 사용
+     */
+    static HashMap<String,Object> customerMap = null;
 
     static String nfilterKey = null;
 
@@ -152,7 +157,7 @@ public class Config {
     }};
 
     final public static ArrayList<CustomFragment> oprApiFragment = new ArrayList<CustomFragment>() {{
-        add(null);
+        add(new OPR_EntireServiceCheckFragment());
         add(null);
         add(null);
         add(null);
@@ -206,4 +211,16 @@ public class Config {
         add(null);
         add(null);
     }};
+
+    final public static String getPhoneNum(){
+        return "01030118502";
+    }
+
+    public static HashMap<String, Object> getCustomerMap() {
+        return customerMap;
+    }
+
+    public static void setCustomerMap(HashMap<String, Object> customerMap) {
+        Config.customerMap = customerMap;
+    }
 }
