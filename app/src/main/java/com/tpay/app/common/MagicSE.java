@@ -94,31 +94,17 @@ public class MagicSE {
             (byte) 0x6C, (byte) 0x10, (byte) 0xD6, (byte) 0xEA, (byte) 0x92, (byte) 0x36, (byte) 0xCC, (byte) 0xD6, (byte) 0xE2, (byte) 0x24, (byte) 0xC7, (byte) 0x04, (byte) 0x6A, (byte) 0xC5, (byte) 0x59
     };
     final static int timeout = 10000;
-    final static String deviceType = "001";
-    final static int checkNum = 20;
     /*
      * 최초 호출시에 단한번만 호출하고 재사용함
      */
     static MagicSE2 instance = null;
     static MagicSE magicse = null;
     static String jsessionId = null;
+    final static String deviceType = "001";
     static boolean iniFlag = false;
     static String sessionKey = null;
     static AppCompatActivity staticView = null;
-
-    /**
-     * 객체 초기화 세로운 Session 호출 필요할경우 호출한후 getInstance 실행
-     * @throws Exception
-     */
-    public static synchronized void setInit() throws Exception {
-        instance = null;
-        magicse = null;
-        jsessionId = null;
-        iniFlag = false;
-        sessionKey = null;
-        staticView = null;
-        d("Tag","instance : "+instance+", magicse : "+ magicse+", jsessionId : "+jsessionId);
-    }
+    final static int checkNum = 20;
 
     /**
      * 초기화 관련 부분은 synchronized 처리해서 중복 호출 방지
@@ -346,9 +332,13 @@ public class MagicSE {
                     buffer.append(line);
                 }
                 result = new JSONObject(buffer.toString());
-                if (result != null && result.get("ENCRYPT_DATA") != null && !"".equalsIgnoreCase(result.get("ENCRYPT_DATA").toString())) {
-                    byte[] dec_resultByte = instance.MagicSE_DecData(sessionKey, result.getString("ENCRYPT_DATA"));
-                    result = new JSONObject(new String(dec_resultByte, "UTF-8"));
+                try {
+                    if (result != null && result.get("ENCRYPT_DATA") != null) {
+                        byte[] dec_resultByte = instance.MagicSE_DecData(sessionKey, result.getString("ENCRYPT_DATA"));
+                        result = new JSONObject(new String(dec_resultByte, "UTF-8"));
+                    }
+                }catch (Exception e){
+                    d("Error",""+e.getMessage());
                 }
                 d("Result : ", result.toString());
             }

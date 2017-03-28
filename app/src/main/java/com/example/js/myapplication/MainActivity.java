@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.Map;
 
 import static android.util.Log.d;
-import static android.widget.AdapterView.*;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private String serverURL;
@@ -68,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ArrayAdapter<CharSequence> serverAdapter = ArrayAdapter.createFromResource(this, R.array.ServerList, android.R.layout.simple_spinner_item);
         serverAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         serverSpinner.setAdapter(serverAdapter);
-        serverSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+        serverSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 /*
@@ -105,111 +104,157 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String phoneNum = telephonyManager.getLine1Number();
         mdnList = Config.mdnList;
         mdnList.clear();
-//        mdnList.add("01030118502");
-//        mdnList.add("01000001234");
-//        mdnList.add("01000005678");
-        mdnText.setText("01030118502");
+        mdnList.add(phoneNum);
+        mdnList.add("01000001234");
+        mdnList.add("01000005678");
+        mdnText.setText(Config.getPhoneNum());
         mdnText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                d("TAG","setOnClickListener");
+                mdnSpinner.performClick();
             }
         });
 
-        final ArrayAdapter<String> mdnAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, mdnList);
-        mdnAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-        mdnSpinner.setAdapter(mdnAdapter);
-        mdnSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                d("TAG","onItemSelected");
-                String text = mdnAdapter.getItem(position);
-                d("TAG","onItemSelected --> text : "+text);
-                //mdnText.setText(text);
-                /**
-                 * Step2
-                 * mdnList에서 선택된 MDN으로
-                 * MDN 정보를 받아 와서 해당 SESSION_ID로 MagicSE초기화
-                 * */
-                HashMap<String, Object> map = new HashMap<String, Object>();
-                map.put("SESSION_ID", "2683f67bcb38cccddafbee013fa3d304af324c30");
-//                    map.put("SESSION_ID", "536a4832ce358f30575f58f0fdd44cb45e91da7f");
-                //TODO
-                try {
-                    HashMap<String, Object> resultMap = MagicSE.getInstance(appCompatActivity).sendAPI(map, "App-CustomerMainSearch", false);
-                    d("TAG", resultMap.toString());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                d("TAG","onNothingSelected");
-            }
-        });
+//        final ArrayAdapter<String> mdnAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, mdnList);
+//        mdnAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+//        mdnSpinner.setAdapter(mdnAdapter);
+//        mdnSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                d("TAG","onItemSelected");
+////                String text = mdnAdapter.getItem(position);
+////                d("TAG","onItemSelected : "+text);
+////                mdnText.setText(text);
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parent) {
+//            }
+//        });
 
         Button resetButton = (Button) mCustomView.findViewById(R.id.action_bar_reset_button);
         resetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 d("TAG","리셋 버튼 클릭");
-                /* 리셋 버튼 클릭 => mdnText 영역의 번호로 다회선 검색 후 mdnList에 다회선 번호들 넣기*/
+                /* * 리셋 버튼 클릭 => mdnText 영역의 번호로 다회선 검색 후 mdnList에 다회선 번호들 넣기*/
                 try {
                     /**
                      * Step1
-                     * mdnText 입력된 MDN으로
-                     * MagicSE초기화 후 MultiLineSearch API로 MDN 리스트를 받아서 mdnList 동기화
+                     * mdnText 입력값을 이용해서
+                     * MagicSE세션 초기화한후 MultiLineSearch API를 이용해서 MDN 정보를 받아온다
                      */
                     Editable mdn = mdnText.getText();
+                    //TODO Sesson ID 받아오는 API 신규로 만들어서 설정 필요함(보안상 문제나 이슈 발생할경우 사용자 세션 받아 오는 부분으로 대체)
+                    HashMap<String, Object> sessionMap = new HashMap<String, Object>();
+                    sessionMap.put("MDN", mdn.toString());
+                    d("TAG", "sessionMap : "+sessionMap);
+                    HashMap<String, Object> sessionResultMap = MagicSE.sendAPI(sessionMap, "App-GetSessionId", true);
+                    d("TAG", sessionResultMap.toString());
+                    if(!"0".equalsIgnoreCase((String) sessionResultMap.get("RESULT_CODE"))) {
+                        return;
+                    }
                     HashMap<String, Object> map = new HashMap<String, Object>();
-                    map.put("MDN", mdn.toString());
-                    d("TAG", "map : "+map);
-                    //TODO Sesson ID 받아 올수 있는 API 추가후 연동 필요
-                    HashMap<String, Object> resultMap = MagicSE.getInstance(appCompatActivity).sendAPI(map, "App-GetJSessionId", false);
+                    map.put("SESSION_ID", sessionResultMap.get("SESSION_ID").toString());
+                    //map.put("SESSION_ID", "2683f67bcb38cccddafbee013fa3d304af324c30");
+                    HashMap<String, Object> resultMap =  MagicSE.sendAPI(map, "App-SessionInitialize", true);
                     d("TAG", resultMap.toString());
                     if(!"0".equalsIgnoreCase((String) resultMap.get("RESULT_CODE"))) {
-                        Toast.makeText(getApplicationContext(), "App-GetJSessionId RESULT_CODE : "+(String) resultMap.get("RESULT_CODE"), Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    map = new HashMap<String, Object>();
-//                    map.put("SESSION_ID", resultMap.get("JSESSION_ID").toString());
-                    map.put("SESSION_ID", "2683f67bcb38cccddafbee013fa3d304af324c30");
-                    resultMap = MagicSE.getInstance(appCompatActivity).sendAPI(map, "App-SessionInitialize", true);
+                    resultMap =  MagicSE.sendAPI(map, "App-MultiLineSearch", true);
                     d("TAG", resultMap.toString());
                     if(!"0".equalsIgnoreCase((String) resultMap.get("RESULT_CODE"))) {
-                        Toast.makeText(getApplicationContext(), "App-SessionInitialize RESULT_CODE : "+(String) resultMap.get("RESULT_CODE"), Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    resultMap = MagicSE.getInstance(appCompatActivity).sendAPI(map, "App-MultiLineSearch", true);
-                    d("TAG", resultMap.toString());
-                    if(!"0".equalsIgnoreCase((String) resultMap.get("RESULT_CODE"))) {
-                        Toast.makeText(getApplicationContext(), "App-MultiLineSearch RESULT_CODE : "+(String) resultMap.get("RESULT_CODE"), Toast.LENGTH_SHORT).show();
                         return;
                     }
                     List resultMdnList = (List) resultMap.get("MDN_LIST");
+                    final List<String> svNumList = new ArrayList();
                     if(resultMdnList != null ){
                         mdnList.clear();
                         for(int i=0;i<resultMdnList.size();i++){
                             Map<String , Object> dataMap = (Map<String, Object>) resultMdnList.get(i);
                             mdnList.add(dataMap.get("MDN").toString());
+                            svNumList.add(dataMap.get("SVC_MGMT_NUM").toString());
                         }
-
+//                        mdnList.add("01086231697");
+//                        mdnList.add("01020345018");
+//                        mdnList.add("01092809106");
+//                        mdnList.add("01038324035");
                     }else{
                         mdnList.clear();
-                        mdnList.add("MDN이 존재 하지 않습니다.");
-
+                        mdnList.add("MDN정보가 존재 하지 않습니다.");
                     }
+//                    if(resultMdnList != null ){
+//                        if(resultMdnList.size() == 1){
+//
+//                        }
+//                    }
                     d("TAG","mdnList : "+mdnList.toString());
-//                    mdnSpinner.setVisibility(View.VISIBLE);
+                    /**
+                     * mdnList를 재 정의 해서 사용할경우
+                     * mdnSpinner.setOnItemSelectedListener를 신규로 재정의 하지 않으면 Android에서 정상적으로 인식하지 않음
+                     * 추후 Android 개발자 오면 해당 방식 확인 필요
+                     */
+                    final ArrayAdapter<String> mdnAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, mdnList);
+                    mdnAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+                    mdnSpinner.setAdapter(mdnAdapter);
                     mdnSpinner.performClick();
+                    /**
+                     * 선택된 사용자 정보로 Session 정보 조회후 SessionInitialize실행 응답 받은 정보를 Config customerMapd에 저장
+                     */
+                    mdnSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                            d("TAG","onItemSelected");
+                            String text = mdnAdapter.getItem(position);
+                            String svg_mgmt_num = svNumList.get(position);
+                            d("TAG","onItemSelected --> MDN : "+text+", svg_mgnt_num : "+svg_mgmt_num);
+
+                            try {
+                                //Step 1 선택된 MDN 으로 사용자 Session ID 정보를 조회
+                                HashMap<String, Object> sessionMap = new HashMap<String, Object>();
+                                mdnText.setText(text);
+                                sessionMap.put("MDN", text);
+                                d("TAG", "sessionMap : "+sessionMap);
+                                HashMap<String, Object> sessionResultMap = MagicSE.sendAPI(sessionMap, "App-GetSessionId", true);
+                                d("TAG", sessionResultMap.toString());
+                                if(!"0".equalsIgnoreCase((String) sessionResultMap.get("RESULT_CODE"))) {
+                                    return;
+                                }
+                                //Step 2 조회한 사용자 Session ID를 이용 세션 초기화
+                                HashMap<String, Object> map = new HashMap<String, Object>();
+                                map.put("SESSION_ID", sessionResultMap.get("SESSION_ID"));
+                                HashMap<String, Object> resultMap = MagicSE.sendAPI(map, "App-SessionInitialize", true);
+                                if(!"0".equalsIgnoreCase((String) resultMap.get("RESULT_CODE"))) {
+                                    return;
+                                }
+                                //Step 2 세션 초기화 후 CustomerMainSearch를 이용 사용자 정보를 받아서 Config CustomerMap 객체에 저장
+                                resultMap = MagicSE.sendAPI(map, "App-CustomerMainSearch", true);
+                                if(!"0".equalsIgnoreCase((String) resultMap.get("RESULT_CODE"))) {
+                                    return;
+                                }
+
+                                resultMap.put("MDN",text);
+                                resultMap.put("SESSION_ID",sessionResultMap.get("SESSION_ID"));
+                                resultMap.put("SVC_MGMT_NUM",svg_mgmt_num);
+                                d("TAG", resultMap.toString());
+
+                                Config.setCustomerMap(resultMap);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        @Override
+                        public void onNothingSelected(AdapterView<?> parent) {
+                        }
+                    });
+
                 } catch (Exception e) {
                     e.printStackTrace();
                     d("ERROR",""+e.getMessage());
                 }
-
-                d("TAG"," 초기화 종료");
-//                mdnAdapter.notifyDataSetChanged();
             }
         });
 
@@ -220,7 +265,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         apiAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, apiList);
         apiAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         apiSpinner.setAdapter(apiAdapter);
-        apiSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+        apiSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 apiName = apiList.get(position);
