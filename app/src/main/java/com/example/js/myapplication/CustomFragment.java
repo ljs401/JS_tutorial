@@ -27,6 +27,7 @@ import static android.util.Log.d;
 
 public abstract class CustomFragment extends Fragment {
     private HashMap<String, Object> result;
+
     private AppCompatActivity activity;
     private String apiName;
     private boolean encrypted;
@@ -47,6 +48,9 @@ public abstract class CustomFragment extends Fragment {
     public void showResultValues() {
         TableLayout outputLayout = (TableLayout) getActivity().findViewById(R.id.main_area_output);
         if (!result.isEmpty()) {
+            d("TAG","result : "+result);
+            d("TAG","getActivity() : "+getActivity());
+            outputLayout.removeAllViews();
             TableRow.LayoutParams param = new TableRow.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1);
             param.setMargins(1, 1, 1, 1);
             for (String key : result.keySet()) {

@@ -2,6 +2,7 @@ package com.tpay.app.common;
 
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.dreamsecurity.e2e.MagicSE2;
 
@@ -115,11 +116,12 @@ public class MagicSE {
         String response = "";
         HttpURLConnection urlConnection = null;
 
-        if (instance == null && magicse == null) {
+        if (instance == null || magicse == null) {
             iniFlag = true;
             try {
-                magicse = new MagicSE();
-                instance = new MagicSE2(staticView.getApplicationContext());
+                if(magicse == null) {
+                    magicse = new MagicSE();
+                }
 
                 Utile utile = new Utile();
                 URL url = new URL(Config.serverIP + apiName);
@@ -162,6 +164,8 @@ public class MagicSE {
                         // 서버로부터 서버 인증서를 수신한다.
                         String security_certificate = (String) resultJson.get("SECURITY_CERTIFICATE");
 
+                        // MagicSE 인증서 정상 로드시에 MagicSE 생성
+                        instance = new MagicSE2(staticView.getApplicationContext());
                         // MagicSE 버전을 가져온다.
                         String version = instance.MagicSE_GetVersion();
                         Log.d("Debug", "version : " + version);
@@ -223,7 +227,6 @@ public class MagicSE {
                     d("TAG", "Connection Fail");
                 }
                 d("TAG", "Pass All");
-                iniFlag = false;
             } catch (Exception ex) {
                 d("TAG", "Exception : " + ex.getMessage());
                 instance = null;
@@ -243,17 +246,17 @@ public class MagicSE {
     /**
      * 전달 받은 JSONObject 객체를 Thread를 이용해서 API요청 함수로 전달
      *
-     * @param jObj
-     * @param apiName
-     * @return
+     * @param jObj API로 전달할 파메터가 들어있는 JSONObject
+     * @param apiName API명
+     * @param flag MagicSE 암호화 여부
      */
-    public HashMap<String, Object> sendAPI(final JSONObject jObj, final String apiName, final boolean flag) throws JSONException {
+    public static HashMap<String, Object> sendAPI(final JSONObject jObj, final String apiName, final boolean flag) throws JSONException {
         d("Info", "sendAPI Type JSONObject");
         final HashMap<String, Object> map = new HashMap<String, Object>();
         new Thread(new Runnable() {
             public void run() {
                 try {
-                    HashMap<String, Object> obj2 = (HashMap<String, Object>) magicse.sendAPIServer(jObj, apiName, flag);
+                    HashMap<String, Object> obj2 = (HashMap<String, Object>) MagicSE.getInstance(staticView).sendAPIServer(jObj, apiName, flag);
                     map.put("RESULT", obj2);
                 } catch (Exception e) {
                     HashMap<String, Object> obj2 = new HashMap<String, Object>();
@@ -272,10 +275,18 @@ public class MagicSE {
                 e.printStackTrace();
             }
         }
-        if (!map.containsKey("RESULT")) {
+        if(!map.containsKey("RESULT")) {
             HashMap<String, Object> obj2 = new HashMap<>();
-            obj2.put("RESULT_CODE", "");
+            obj2.put("RESULT_CODE", "LINKAGE_ERROR");
             map.put("RESULT", obj2);
+        }else{
+            /**
+             * 테스트용 공통이라서 응답 실패에 대한 알람을 Toast방식으로 사용자에게 전달
+             * 실재 앱에서 사용해야 할경우 Toast 사용 금지 Error 별 해당 내용 처리하는 로직 추가 필요
+             */
+            if(!"0".equalsIgnoreCase((String) map.get("RESULT_CODE"))) {
+                Toast.makeText(staticView.getApplicationContext(), apiName+" RESULT_CODE : "+(String) map.get("RESULT_CODE"), Toast.LENGTH_SHORT).show();
+            }
         }
         return (HashMap<String, Object>) map.get("RESULT");
     }
@@ -287,7 +298,7 @@ public class MagicSE {
      * @param apiName
      * @return
      */
-    public Map<String, Object> sendAPIServer(JSONObject jObj, String apiName, boolean flag) throws JSONException {
+    public static Map<String, Object> sendAPIServer(JSONObject jObj, String apiName, boolean flag) throws JSONException {
         d("Info", "sendAPI : " + flag);
         JSONObject result = null;
         HttpURLConnection urlConnection = null;
@@ -322,9 +333,13 @@ public class MagicSE {
                     buffer.append(line);
                 }
                 result = new JSONObject(buffer.toString());
-                if (result != null && result.get("ENCRYPT_DATA") != null) {
-                    byte[] dec_resultByte = instance.MagicSE_DecData(sessionKey, result.getString("ENCRYPT_DATA"));
-                    result = new JSONObject(new String(dec_resultByte, "UTF-8"));
+                try {
+                    if (result != null && result.get("ENCRYPT_DATA") != null) {
+                        byte[] dec_resultByte = instance.MagicSE_DecData(sessionKey, result.getString("ENCRYPT_DATA"));
+                        result = new JSONObject(new String(dec_resultByte, "UTF-8"));
+                    }
+                }catch (Exception e){
+                    d("Error",""+e.getMessage());
                 }
                 d("Result : ", result.toString());
             }
@@ -339,19 +354,19 @@ public class MagicSE {
 
     /**
      * API로 전달 받은 HashMap<String,Object> 객체를  JSONObject로 전환해서 Thread를 이용 API요청 함수로 전달
-     *
-     * @param paramMap
-     * @param apiName
+     * @param paramMap API로 전달할 파메터가 들어있는 Map
+     * @param apiName API명
+     * @param flag MagicSE 암호화 여부
      * @return
      */
-    public HashMap<String, Object> sendAPI(HashMap<String, Object> paramMap, final String apiName, final boolean flag) throws JSONException {
+    public static HashMap<String, Object> sendAPI(HashMap<String, Object> paramMap, final String apiName, final boolean flag) throws JSONException {
         d("Info", "sendAPI Type Map");
         final JSONObject jObj = new JSONObject(paramMap);
         final HashMap<String, Object> map = new HashMap<String, Object>();
         new Thread(new Runnable() {
             public void run() {
                 try {
-                    HashMap<String, Object> obj2 = (HashMap<String, Object>) magicse.sendAPIServer(jObj, apiName, flag);
+                    HashMap<String, Object> obj2 = (HashMap<String, Object>) MagicSE.getInstance(staticView).sendAPIServer(jObj, apiName, flag);
                     map.put("RESULT", obj2);
                 } catch (Exception e) {
                     HashMap<String, Object> obj2 = new HashMap<String, Object>();
@@ -374,6 +389,10 @@ public class MagicSE {
             HashMap<String, Object> obj2 = new HashMap<>();
             obj2.put("RESULT_CODE", "LINKAGE_ERROR");
             map.put("RESULT", obj2);
+        }else{
+            if("EXPIRED_SESSION".equalsIgnoreCase(((HashMap<String, Object>)map.get("RESULT")).get("RESULT_CODE").toString())) {
+                reMagicSEInit(jObj, apiName, flag);
+            }
         }
         return (HashMap<String, Object>) map.get("RESULT");
     }
@@ -393,7 +412,7 @@ public class MagicSE {
         urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
         urlConnection.setRequestProperty("_X2_IDENTIFIER_KEY_", "_JSON_MESSAGE_");
         urlConnection.setRequestProperty("_DEVICE_TYPE_", deviceType);
-        urlConnection.setRequestProperty("_TRANSACTION_ID_", "201703011200");
+        urlConnection.setRequestProperty("_TRANSACTION_ID_", utile.getTransactionId());
         urlConnection.setRequestProperty("_DEVICE_ID_", device_id);
         urlConnection.setConnectTimeout(timeout);
         urlConnection.setReadTimeout(timeout);
@@ -446,6 +465,16 @@ public class MagicSE {
             list.add(value);
         }
         return list;
+    }
+
+    static synchronized public Map<String, Object> reMagicSEInit(final JSONObject paramMap, final String apiName, final boolean flag){
+        instance = null;
+        try {
+            getInstance(staticView);
+            return sendAPI(paramMap,apiName,flag);
+        } catch (Exception e) {
+            return null;
+        }
     }
 }
 

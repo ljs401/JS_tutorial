@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.support.v4.app.ActivityCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 import com.tpay.app.common.MagicSE;
 
 import java.util.HashMap;
+import static android.util.Log.d;
 
 public class LoginActivity extends AppCompatActivity {
     private Intent intent = null;
@@ -39,8 +41,11 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                //사용자의 OS 버전이 마시멜로우 이상인지 체크한다.
-                if (Build.VERSION.SDK_INT == Build.VERSION_CODES.M) {
+
+                /* 사용자의 OS 버전이 마시멜로우 이상인지 체크한다. */
+                d("TAG","Build.VERSION.SDK_INT : "+Build.VERSION.SDK_INT);
+                d("TAG","Build.VERSION_CODES.SDK_INT : "+Build.VERSION_CODES.M);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     int permissionResult = checkSelfPermission(Manifest.permission.READ_PHONE_STATE);
                     //READ_PHONE_STATE 권한이 없을 때
                     // 패키지는 안드로이드 어플리케이션의 아이디다.( 어플리케이션 구분자 )
@@ -74,6 +79,7 @@ public class LoginActivity extends AppCompatActivity {
                         else {
                             // READ_PHONE_STATE 권한을 Android OS 에 요청한다.
                             requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE}, 1000);
+                            requestPermissions(new String[]{Manifest.permission.INTERNET}, 1000);
                         }
 
                     }
