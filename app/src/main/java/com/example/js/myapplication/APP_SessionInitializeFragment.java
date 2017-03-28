@@ -30,7 +30,15 @@ public class APP_SessionInitializeFragment extends CustomFragment {
 
     @Override
     public void setParameter(AppCompatActivity appCompatActivity, String apiName) {
+        //TODO
+        //Step 1) 암호화 여부 설정
         boolean encrypted = true;
+
+        //TODO
+        //Step 2) layout에서 필드값 읽어오기
+
+        //TODO
+        //Step 3) 읽어온 필드값 파라미터로 세팅
         HashMap<String, Object> parameter = new HashMap<String, Object>();
         parameter.put("SESSION_ID", "536a4832ce358f30575f58f0fdd44cb45e91da7f");
         // parameter.put("SESSION_ID", "2683f67bcb38cccddafbee013fa3d304af324c30");

@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import android.support.v7.widget.Toolbar;
-import android.telephony.TelephonyManager;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -39,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private String apiName = "";
     private CustomFragment currentFragment;
     final AppCompatActivity appCompatActivity = this;
-
+    private BackPressCloseHandler backPressCloseHandler;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,13 +97,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         final EditText mdnText = (EditText) mCustomView.findViewById(R.id.action_bar_mdn_editText);
         final Spinner mdnSpinner = (Spinner) mCustomView.findViewById(R.id.action_bar_mdn_spinner);
-        TelephonyManager telephonyManager = (TelephonyManager) getApplicationContext().getSystemService(getApplicationContext().TELEPHONY_SERVICE);
-        String phoneNum = telephonyManager.getLine1Number();
+
+        String phoneNum = getIntent().getStringExtra(getResources().getString(R.string.mdn));
+        if (phoneNum == null) {
+            phoneNum = "010" + "0000" + "0000";
+        }
         mdnList = Config.mdnList;
         mdnList.clear();
         mdnList.add(phoneNum);
-        mdnList.add("01000001234");
-        mdnList.add("01000005678");
         mdnText.setText(phoneNum);
         mdnText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     HashMap<String, Object> map = new HashMap<String, Object>();
                     map.put("SESSION_ID", "536a4832ce358f30575f58f0fdd44cb45e91da7f");
                     // map.put("SESSION_ID", "2683f67bcb38cccddafbee013fa3d304af324c30");
-                    HashMap<String, Object> resultMap = MagicSE.getInstance(appCompatActivity).sendAPI(map, "App-MultiLineSearch", true);
+                    HashMap<String, Object> resultMap = MagicSE.getInstance(appCompatActivity).sendAPI(map, "App-MDNSearch", true);
 
                     d("TAG", resultMap.toString());
                 } catch (Exception e) {
@@ -176,7 +176,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         requestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                currentFragment.setParameter(appCompatActivity, apiName);
+                if (currentFragment != null) {
+                    currentFragment.setParameter(appCompatActivity, apiName);
+                }
             }
         });
 
@@ -187,6 +189,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // transaction 을 UI 큐에 추가한다
         ft.commit();
 
+        backPressCloseHandler = new BackPressCloseHandler();
     }
 
     @Override
@@ -228,9 +231,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             isSelected = viewId;
             apiAdapter.notifyDataSetChanged();
             apiSpinner.setSelection(0);
+            currentFragment = apiFragment.get(0);
+        }
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        backPressCloseHandler.onBackPressed();
+    }
+
+
+    public class BackPressCloseHandler {
+        private long backKeyPressedTime = 0;
+        private Toast toast;
+
+        public void onBackPressed() {
+            if (System.currentTimeMillis() > backKeyPressedTime + 2000) {
+                backKeyPressedTime = System.currentTimeMillis();
+                showGuide();
+                return;
+            }
+            if (System.currentTimeMillis() <= backKeyPressedTime + 2000) {
+                MainActivity.this.finish();
+                toast.cancel();
+            }
+        }
+
+        public void showGuide() {
+            toast = Toast.makeText(MainActivity.this, "뒤로 버튼을 한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT);
+            toast.show();
         }
     }
 }
-
-
-

@@ -125,6 +125,7 @@ public class MagicSE {
                 URL url = new URL(Config.serverIP + apiName);
                 d("Debug", Config.serverIP + apiName);
                 urlConnection = (HttpURLConnection) url.openConnection();
+
                 setHeader(urlConnection);
 
                 OutputStream os = urlConnection.getOutputStream();
@@ -141,7 +142,7 @@ public class MagicSE {
                     d("Debug", urlConnection.getHeaderFields().toString());
                     String cookieStr = urlConnection.getHeaderField("Set-Cookie");
                     String cookie = cookieStr.substring(0, cookieStr.indexOf(";"));
-                   // String cookieName = cookie.substring(0, cookie.indexOf("="));
+                    // String cookieName = cookie.substring(0, cookie.indexOf("="));
                     /**
                      * jsessionId 읽어들여서 설정(Static)
                      */
@@ -447,3 +448,4 @@ public class MagicSE {
         return list;
     }
 }
+
