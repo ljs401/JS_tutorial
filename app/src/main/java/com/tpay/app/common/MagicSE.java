@@ -119,24 +119,28 @@ public class MagicSE {
         if (instance == null || magicse == null) {
             iniFlag = true;
             try {
-                if(magicse == null) {
-                    magicse = new MagicSE();
-                }
+                magicse = new MagicSE();
 
                 Utile utile = new Utile();
                 URL url = new URL(Config.serverIP + apiName);
                 d("Debug", Config.serverIP + apiName);
                 urlConnection = (HttpURLConnection) url.openConnection();
                 setHeader(urlConnection);
-
+//                urlConnection.setDoInput(false);
+                urlConnection.setDoOutput(false);
+                urlConnection.connect();
+                /*
+                d("Debug","urlConnection.getOutputStream() : "+urlConnection.getOutputStream());
                 OutputStream os = urlConnection.getOutputStream();
-
+                d("Debug", "os : "+os);
                 BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+                d("Debug", "bw : "+bw);
                 bw.write("TEST=true");
                 bw.flush();
                 bw.close();
                 os.close();
-
+                */
+                d("Debug", "urlConnection.getResponseCode() : "+urlConnection.getResponseCode());
                 if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                     String line;
                     BufferedReader reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8"));
@@ -183,9 +187,9 @@ public class MagicSE {
                         setHeader(urlConnection);
                         urlConnection.setRequestProperty("Cookie", "JSESSIONID=" + jsessionId);
 
-                        os = urlConnection.getOutputStream();
+                        OutputStream os = urlConnection.getOutputStream();
 
-                        bw = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+                        BufferedWriter bw =  new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
                         String enSkey = java.net.URLEncoder.encode(encSessionKey);
                         d("Debug", "enSkey : " + enSkey);
                         bw.write("SECURITY_SESSION_KEY=" + enSkey);
@@ -218,6 +222,44 @@ public class MagicSE {
                              * Nfilter 공개키를 Config Class에 셋팅
                              */
                             Config.setNfilterKey(nfilter_public_key);
+                            if(Config.getUserID() != null){
+                                apiName = "App-SecuritySessionKey";
+                                url = new URL(Config.serverIP + apiName);
+                                d("Debug", Config.serverIP + apiName);
+                                urlConnection = (HttpURLConnection) url.openConnection();
+                                setHeader(urlConnection);
+                                urlConnection.setRequestProperty("Cookie", "JSESSIONID=" + jsessionId);
+                                os = urlConnection.getOutputStream();
+
+                                bw =  new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+                                JSONObject jObj = new JSONObject();
+                                jObj.put("SESSION_ID", Config.getUserID());
+                                JSONObject obj = new JSONObject();
+                                obj.put("ENCRYPT_DATA", instance.MagicSE_EncData(sessionKey, jObj.toString().getBytes()));
+                                bw.write("_JSON_MESSAGE_=" + java.net.URLEncoder.encode(obj.toString()));
+                                bw.flush();
+                                bw.close();
+                                os.close();
+                                if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                                    reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8"));
+                                    d("Debug", urlConnection.getHeaderFields().toString());
+
+                                    while ((line = reader.readLine()) != null) {
+                                        d("Debug : ", line + "\n");
+                                        response += line;
+                                    }
+                                }
+                                /*
+                                HashMap<String, Object> map = new HashMap<String, Object>();
+                                map.put("SESSION_ID", Config.getUserID());
+                                HashMap<String, Object> resultMap =  MagicSE.sendAPI(map, "App-SessionInitialize", true);
+                                d("TAG", resultMap.toString());
+                                if(!"0".equalsIgnoreCase((String) resultMap.get("RESULT_CODE"))) {
+                                    d("Debug","SessionInitialize : FALSE");
+                                }
+                                */
+                            }
+
                         }
                     } else {
                         throw new Exception("SECURITY_CERTIFICATE FALSE");
@@ -227,7 +269,7 @@ public class MagicSE {
                 }
                 d("TAG", "Pass All");
             } catch (Exception ex) {
-                d("TAG", "Exception : " + ex.getMessage());
+                d("Catch", "Exception : " + ex.getMessage());
                 instance = null;
                 iniFlag = false;
                 throw ex;
@@ -238,6 +280,7 @@ public class MagicSE {
         } else {
             d("TAG", "RECALL");
         }
+        d("FIN", "getInstance");
         iniFlag = false;
         return magicse;
     }
@@ -278,13 +321,17 @@ public class MagicSE {
             HashMap<String, Object> obj2 = new HashMap<>();
             obj2.put("RESULT_CODE", "LINKAGE_ERROR");
             map.put("RESULT", obj2);
+//            Toast.makeText(staticView.getApplicationContext(), apiName+" RESULT_CODE : "+(String) map.get("RESULT_CODE"), Toast.LENGTH_SHORT).show();
         }else{
             /**
              * 테스트용 공통이라서 응답 실패에 대한 알람을 Toast방식으로 사용자에게 전달
              * 실재 앱에서 사용해야 할경우 Toast 사용 금지 Error 별 해당 내용 처리하는 로직 추가 필요
              */
             if(!"0".equalsIgnoreCase((String) map.get("RESULT_CODE"))) {
-                Toast.makeText(staticView.getApplicationContext(), apiName+" RESULT_CODE : "+(String) map.get("RESULT_CODE"), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(staticView.getApplicationContext(), apiName+" RESULT_CODE : "+(String) map.get("RESULT_CODE"), Toast.LENGTH_SHORT).show();
+                if("EXPIRED_SESSION".equalsIgnoreCase(((HashMap<String, Object>)map.get("RESULT")).get("RESULT_CODE").toString())) {
+                    reMagicSEInit(jObj, apiName, flag);
+                }
             }
         }
         return (HashMap<String, Object>) map.get("RESULT");
@@ -388,9 +435,17 @@ public class MagicSE {
             HashMap<String, Object> obj2 = new HashMap<>();
             obj2.put("RESULT_CODE", "LINKAGE_ERROR");
             map.put("RESULT", obj2);
+//            Toast.makeText(staticView.getApplicationContext(), apiName+" RESULT_CODE : "+(String) map.get("RESULT_CODE"), Toast.LENGTH_SHORT).show();
         }else{
-            if("EXPIRED_SESSION".equalsIgnoreCase(((HashMap<String, Object>)map.get("RESULT")).get("RESULT_CODE").toString())) {
-                reMagicSEInit(jObj, apiName, flag);
+            /**
+             * 테스트용 공통이라서 응답 실패에 대한 알람을 Toast방식으로 사용자에게 전달
+             * 실재 앱에서 사용해야 할경우 Toast 사용 금지 Error 별 해당 내용 처리하는 로직 추가 필요
+             */
+            if(!"0".equalsIgnoreCase((String) map.get("RESULT_CODE"))) {
+//                Toast.makeText(staticView.getApplicationContext(), apiName+" RESULT_CODE : "+(String) map.get("RESULT_CODE"), Toast.LENGTH_SHORT).show();
+                if("EXPIRED_SESSION".equalsIgnoreCase(((HashMap<String, Object>)map.get("RESULT")).get("RESULT_CODE").toString())) {
+                    reMagicSEInit(jObj, apiName, flag);
+                }
             }
         }
         return (HashMap<String, Object>) map.get("RESULT");
@@ -466,13 +521,69 @@ public class MagicSE {
         return list;
     }
 
+    /**
+     * Session 만료될경우 세션 초기화를 진행하고 1회에 한해서 세션 API 재귀 호출한다
+     * @param paramMap
+     * @param apiName
+     * @param flag
+     * @return
+     */
     static synchronized public Map<String, Object> reMagicSEInit(final JSONObject paramMap, final String apiName, final boolean flag){
-        instance = null;
+        magicse = null;
         try {
-            getInstance(staticView);
-            return sendAPI(paramMap,apiName,flag);
+//            getInstance(staticView);
+            NetworkThread thread = new NetworkThread(staticView);
+            thread.start();
+            return oneSendAPI(paramMap,apiName,flag);
         } catch (Exception e) {
             return null;
         }
+    }
+    /**
+     * 세션 만료시 재호출 하지 않는 API 호출 함수
+     * @param jObj API로 전달할 파메터가 들어있는 JSONObject
+     * @param apiName API명
+     * @param flag MagicSE 암호화 여부
+     */
+    public static HashMap<String, Object> oneSendAPI(final JSONObject jObj, final String apiName, final boolean flag) throws JSONException {
+        d("Info", "oneSendAPI Type JSONObject");
+        final HashMap<String, Object> map = new HashMap<String, Object>();
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    HashMap<String, Object> obj2 = (HashMap<String, Object>) MagicSE.getInstance(staticView).sendAPIServer(jObj, apiName, flag);
+                    map.put("RESULT", obj2);
+                } catch (Exception e) {
+                    HashMap<String, Object> obj2 = new HashMap<String, Object>();
+                    obj2.put("RESULT_CODE", "LINKAGE_ERROR");
+                    map.put("RESULT", obj2);
+                }
+            }
+        }).start();
+        for (int i = 0; i < checkNum; i++) {
+            try {
+                Thread.sleep(timeout / checkNum);
+                if (map.containsKey("RESULT")) {
+                    break;
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        if(!map.containsKey("RESULT")) {
+            HashMap<String, Object> obj2 = new HashMap<>();
+            obj2.put("RESULT_CODE", "LINKAGE_ERROR");
+            map.put("RESULT", obj2);
+            Toast.makeText(staticView.getApplicationContext(), apiName+" RESULT_CODE : "+(String) map.get("RESULT_CODE"), Toast.LENGTH_SHORT).show();
+        }else{
+            /**
+             * 테스트용 공통이라서 응답 실패에 대한 알람을 Toast방식으로 사용자에게 전달
+             * 실재 앱에서 사용해야 할경우 Toast 사용 금지 Error 별 해당 내용 처리하는 로직 추가 필요
+             */
+            if(!"0".equalsIgnoreCase((String) map.get("RESULT_CODE"))) {
+                Toast.makeText(staticView.getApplicationContext(), apiName+" RESULT_CODE : "+(String) map.get("RESULT_CODE"), Toast.LENGTH_SHORT).show();
+            }
+        }
+        return (HashMap<String, Object>) map.get("RESULT");
     }
 }

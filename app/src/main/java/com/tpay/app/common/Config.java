@@ -34,6 +34,8 @@ public class Config {
 
     static String nfilterKey = null;
 
+    static String userID = null;
+
     public static String getNfilterKey() {
         return nfilterKey;
     }
@@ -222,5 +224,13 @@ public class Config {
 
     public static void setCustomerMap(HashMap<String, Object> customerMap) {
         Config.customerMap = customerMap;
+    }
+
+    public static String getUserID() {
+        return userID;
+    }
+
+    public static void setUserID(String userID) {
+        Config.userID = userID;
     }
 }

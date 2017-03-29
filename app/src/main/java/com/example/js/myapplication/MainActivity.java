@@ -157,6 +157,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                     HashMap<String, Object> map = new HashMap<String, Object>();
                     map.put("SESSION_ID", sessionResultMap.get("SESSION_ID").toString());
+                    Config.setUserID(sessionResultMap.get("SESSION_ID").toString());
                     //map.put("SESSION_ID", "2683f67bcb38cccddafbee013fa3d304af324c30");
                     HashMap<String, Object> resultMap =  MagicSE.sendAPI(map, "App-SessionInitialize", true);
                     d("TAG", resultMap.toString());
