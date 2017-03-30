@@ -31,7 +31,6 @@ public class APP_MultiLineSearchFragment extends CustomFragment {
         //TODO
         //Step 3) 읽어온 필드값 파라미터로 세팅
         HashMap<String, Object> parameter = new HashMap<String, Object>();
-        parameter.put("SESSION_ID", "536a4832ce358f30575f58f0fdd44cb45e91da7f");
         super.sendAPI(appCompatActivity, apiName, encrypted, parameter);
     }
 }
